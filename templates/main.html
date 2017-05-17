@@ -12,20 +12,20 @@
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
+                    <th>Created</th>
                     <th>Title</th>
                     <th>Author</th>
                     <th>Updated</th>
-                    <th>Created</th>
                 </tr>
             </thead>
 
              <tbody>
-                {% for topic in topics %}
+                {% for topic in topics | sort(attribute="created", reverse=True) %}
                 <tr>
+                    <td> {{ topic.created.strftime('%d.%m.%Y at %H:%M') }} </td>
                     <td> <a href="/topic/{{ topic.key.id() }}"> {{ topic.title }}</a></td>
                     <td> {{ topic.author_email }} </td>
-                    <td> {{ topic.updated }} </td>
-                    <td> {{ topic.created.strftime('%d.%m.%Y at %H:%M') }} </td>
+                    <td> {{ topic.updated.strftime('%d.%m.%Y at %H:%M') }} </td>
                 </tr>
                 {% endfor %}
              </tbody>
