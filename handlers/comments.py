@@ -7,6 +7,7 @@ from models.topic import Topic
 from models.comment import Comment
 from utils.decorators import validate_csrf
 
+
 class CommentAddHandler(BaseHandler):
     @validate_csrf
     def post(self, topic_id):
@@ -15,9 +16,8 @@ class CommentAddHandler(BaseHandler):
             return self.write("Please login.")
 
         text = cgi.escape(self.request.get("comment-text"))
+
         topic = Topic.get_by_id(int(topic_id))
+        new_comment = Comment.create(text, user, topic)
 
-        new_comment = Comment(content=text, author_email=user.email(), topic_id=topic.key.id(), topic_title=topic.title)
-        new_comment.put()
-
-        return self.redirect_to("topic-details", topic_id=topic.key.id())
+        return self.write("Comment created successfully.")
