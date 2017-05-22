@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %} Comments List {% endblock %}
+
+
+{% block content %}
+
+
+{% for comment in comments %}
+    {% for topic in topics %}
+        {% if topic.key.id() == comment.topic_id %}
+         <div class="panel panel-info">
+                <div class="panel-heading">{{ comment.created.strftime("%d.%m.%Y at %H:%M") }}
+                    in: <a href="/topic/{{topic.key.id()}}"> {{ topic.title }} </a></div>
+                <div class="panel-body">
+                    <p>{{ comment.content }}</p>
+                </div>
+         </div>
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+
+{% endblock %}

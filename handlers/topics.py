@@ -49,3 +49,19 @@ class TopicDeleteHandler(BaseHandler):
             Topic.delete(topic=topic_del)
 
         return self.write("Topic deleted successfully.")
+
+class SubscribeToTopicHandler(BaseHandler):
+    @validate_csrf
+    def post(self, topic_id):
+
+        user = users.get_current_user()
+
+        if not user:
+            return self.write("Please login.")
+
+        topic = Topic.get_by_id(int(topic_id))
+        current_user_email = user.email()
+        topic.subscribers.append(current_user_email)
+        topic.put()
+
+        return self.write("You are successfully subscribed to topic: %s " % topic.title)

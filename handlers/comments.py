@@ -21,3 +21,12 @@ class CommentAddHandler(BaseHandler):
         new_comment = Comment.create(text, user, topic)
 
         return self.write("Comment created successfully.")
+
+class CommentsListHandler(BaseHandler):
+    def get(self):
+        user = users.get_current_user()
+        comments = Comment.query(Comment.deleted==False, Comment.author_email==user.email()).fetch()
+        topics = Topic.query().fetch()
+
+        params = {"comments":comments, "topics": topics}
+        return self.render_template("comments_list.html", params=params)

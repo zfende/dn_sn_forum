@@ -2,6 +2,8 @@ from google.appengine.ext import ndb
 from google.appengine.api import mail
 from google.appengine.api import taskqueue
 
+from models.topic import Topic
+
 
 class Comment(ndb.Model):
     content = ndb.TextProperty()
@@ -30,5 +32,16 @@ class Comment(ndb.Model):
                 "topic_id": topic.key.id()
             }
         )
+
+        topic_subscribers = topic.subscribers
+        for email in topic_subscribers:
+            taskqueue.add(
+                url="/task/email-new-comment",
+                params={
+                    "topic_author_email": email,
+                    "topic_title": topic.title,
+                    "topic_id": topic.key.id()
+                }
+            )
 
         return new_comment

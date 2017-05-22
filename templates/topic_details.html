@@ -15,9 +15,13 @@
             {% if topic.author_email == user.email() or user.admin  %}
             <form action="/topic/{{topic.key.id()}}/delete" method="post">
                 <input type="hidden" name="csrf_token" value="{{csrf_token}}">
-                <button class="btn btn-danger">Delete topic</button>
+                <button class="btn btn-danger" style="float:right;">Delete topic</button>
             </form>
             {% endif  %}
+            <form action="/topic/{{topic.key.id()}}/subscribe" method="post">
+                <input type="hidden" name="csrf_token" value="{{csrf_token}}">
+                <button class="btn btn-info">Subscribe</button>
+            </form>
 
         </div>
     </div>
