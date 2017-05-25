@@ -8,6 +8,7 @@ from models.comment import Comment
 from utils.decorators import validate_csrf
 
 
+
 class CommentAddHandler(BaseHandler):
     @validate_csrf
     def post(self, topic_id):
@@ -22,6 +23,7 @@ class CommentAddHandler(BaseHandler):
 
         return self.write("Comment created successfully.")
 
+
 class CommentsListHandler(BaseHandler):
     def get(self):
         user = users.get_current_user()
@@ -30,3 +32,15 @@ class CommentsListHandler(BaseHandler):
 
         params = {"comments":comments, "topics": topics}
         return self.render_template("comments_list.html", params=params)
+
+
+class CommentDeleteHandler(BaseHandler):
+    @validate_csrf
+    def post(self, comment_id):
+        comment = Comment.get_by_id(int(comment_id))
+        user = users.get_current_user()
+
+        if comment.author_email == user.email() or users.is_current_user_admin():
+            Comment.delete(comment)
+
+        return self.write("Comment deleted successfully.")

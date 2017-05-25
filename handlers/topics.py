@@ -50,6 +50,7 @@ class TopicDeleteHandler(BaseHandler):
 
         return self.write("Topic deleted successfully.")
 
+
 class SubscribeToTopicHandler(BaseHandler):
     @validate_csrf
     def post(self, topic_id):

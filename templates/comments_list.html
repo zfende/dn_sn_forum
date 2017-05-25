@@ -6,7 +6,7 @@
 {% block content %}
 
 
-{% for comment in comments %}
+{% for comment in comments|sort(attribute='created') %}
     {% for topic in topics %}
         {% if topic.key.id() == comment.topic_id %}
          <div class="panel panel-info">
