@@ -10,7 +10,7 @@
 
             <div class="form-group">
                 <label>Title</label>
-                <input type="text" class="form-control" name="title" required>
+                <input type="text" class="form-control" name="title" id="add-topic-title" required>
             </div>
 
             <div class="form-group">
@@ -18,8 +18,32 @@
                 <textarea name="text" class="form-control" rows="4" required></textarea>
             </div>
 
-            <button type="submit" class="btn btn-success">Submit</button>
+            <div class="form-group">
+                <label>What is the sum of 8 and 7?</label>
+                <input type="text" class="form-control" id="add-topic-sum" required>
+            </div>
+
+            <button type="submit" class="btn btn-success" id="add-topic-button">Submit</button>
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        var addTopicButton = $("#add-topic-button");
+        var addTopicSum = $("#add-topic-sum");
+
+        addTopicButton.click(function(e) {
+            if (addTopicSum.val() === "15"){
+                addTopicButton.hide();
+                console.log("WUHU");
+            } else {
+                alert("WRONG! Try again.");
+                e.preventDefault();
+            }
+        });
+    });
+</script>
 {% endblock %}

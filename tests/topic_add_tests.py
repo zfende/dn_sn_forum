@@ -2,16 +2,20 @@ import os
 import unittest
 import webapp2
 import webtest
+from handlers.topics import TopicAddHandler
 
 from google.appengine.ext import testbed
-from main import MainHandler
+from google.appengine.api import memcache
+
+from models.topic import Topic
 
 
-class MainPageTests(unittest.TestCase):
+
+class TopicAddTests(unittest.TestCase):
     def setUp(self):
         app = webapp2.WSGIApplication(
             [
-                webapp2.Route('/', MainHandler, name="main-page"),
+                webapp2.Route('/topic/add', TopicAddHandler),
             ])
 
         self.testapp = webtest.TestApp(app)
@@ -33,8 +37,24 @@ class MainPageTests(unittest.TestCase):
     def tearDown(self):
         self.testbed.deactivate()
 
-    def test_main_page_handler(self):
-        get_response = self.testapp.get('/')  # get main handler
+    def test_topic_add_handler(self):
+        # Testing GET response
+        get_response = self.testapp.get('/topic/add')  # get main handler
         self.assertEqual(get_response.status_int, 200)  # if GET request was ok, it should return 200 status code
-        self.assertIn("Welcome to Ninja Tech Forum.", get_response.body)
 
+
+        # Testing POST response
+        csrf_token ="abc123"
+        memcache.add(key=csrf_token, value=True)
+        params = {
+            "title": "To je testna tema",
+            "text": "To je vsebina testne teme.",
+            "csrf_token": csrf_token,
+        }
+        post_response = self.testapp.post('/topic/add', params)
+        self.assertEqual(post_response.status_int, 200)
+
+        topics = Topic.query().fetch()
+        self.assertEqual(len(topics), 1)
+        topic = topics[0]
+        self.assertEqual(topic.title, "To je testna tema")
